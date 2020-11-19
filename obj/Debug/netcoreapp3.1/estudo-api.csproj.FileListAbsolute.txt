@@ -41,3 +41,4 @@ C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\P
 C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dll
 C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticSource.dll
 C:\Users\FOEU\My Private Documents\Projetos\estudo-api\obj\Debug\netcoreapp3.1\estudo-api.csproj.CopyComplete
+C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
