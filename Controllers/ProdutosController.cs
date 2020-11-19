@@ -6,7 +6,7 @@ using System;
 
 namespace estudo_api.Controllers
 {
-    [Route("api/[controller]")] // Necessário para definir a rota, não é automático como em MVC
+    [Route("api/v1/[controller]")] // Necessário para definir a rota, não é automático como em MVC
     [ApiController] // Necessário adicionar pra indicar a API e fazer algumas ações por baixo dos panos
     public class ProdutosController : ControllerBase // Tem menos recursos que o Controller, como poder mexer com HTML, o que não é necessário em API
     {
@@ -46,6 +46,18 @@ namespace estudo_api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]ProdutoTemp pTemp)
         {
+            if (pTemp.Preco <= 0)
+            {
+                Response.StatusCode = 400;
+                return new ObjectResult(new {msg = "O preço do produto não pode ser menor ou igual a 0"});
+            }
+
+            if (pTemp.Nome.Length <= 1)
+            {
+                Response.StatusCode = 400;
+                return new ObjectResult(new {msg = "O nome do produto precisa ter mais de um caracter"});
+            }
+
             Produto p = new Produto();
 
             p.Nome = pTemp.Nome;
@@ -73,6 +85,42 @@ namespace estudo_api.Controllers
             {
                 Response.StatusCode = 404;
                 return new ObjectResult("");
+            }
+        }
+
+        [HttpPatch]
+        public IActionResult Patch([FromBody] Produto produto)
+        {
+            if(produto.Id > 0)
+            {
+                try
+                {
+                    var p = database.Produtos.First(p => p.Id == produto.Id);
+
+                    if(p != null)
+                    {
+                        p.Nome = produto.Nome != null ? produto.Nome : p.Nome; // condicao ? faz algo : faz outra coisa
+                        p.Preco = produto.Preco != 0 ? produto.Preco : p.Preco;
+                        database.SaveChanges();
+
+                        return Ok();
+                    }
+                    else
+                    {
+                        Response.StatusCode = 400;
+                        return new ObjectResult("Produto não encontrado");
+                    }
+                }
+                catch(Exception)
+                {
+                    Response.StatusCode = 400;
+                    return new ObjectResult("Produto não encontrado");
+                }
+            }
+            else
+            {
+                Response.StatusCode = 400;
+                return new ObjectResult(new {msg = "Id do produto é inválido"});
             }
         }
 

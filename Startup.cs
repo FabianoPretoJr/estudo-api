@@ -29,6 +29,9 @@ namespace estudo_api
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
+            services.AddSwaggerGen(config => {
+                config.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {Title = "API DE PRODUTOS", Version = "v1"});
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +47,14 @@ namespace estudo_api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSwagger(config => {
+                config.RouteTemplate = "fabiano/{documentName}/swagger.json";
+            });
+
+            app.UseSwaggerUI(config => {
+                config.SwaggerEndpoint("/fabiano/v1/swagger.json", "v1 docs");
+            });
 
             app.UseEndpoints(endpoints =>
             {

@@ -42,3 +42,8 @@ C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\S
 C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticSource.dll
 C:\Users\FOEU\My Private Documents\Projetos\estudo-api\obj\Debug\netcoreapp3.1\estudo-api.csproj.CopyComplete
 C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\Microsoft.OpenApi.dll
+C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\FOEU\My Private Documents\Projetos\estudo-api\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\FOEU\My Private Documents\Projetos\estudo-api\obj\Debug\netcoreapp3.1\estudo-api.MvcApplicationPartsAssemblyInfo.cs
