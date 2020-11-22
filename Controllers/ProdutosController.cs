@@ -3,6 +3,8 @@ using estudo_api.Models;
 using estudo_api.Data;
 using System.Linq;
 using System;
+using estudo_api.HATEOAS;
+using System.Collections.Generic;
 
 namespace estudo_api.Controllers
 {
@@ -11,9 +13,15 @@ namespace estudo_api.Controllers
     public class ProdutosController : ControllerBase // Tem menos recursos que o Controller, como poder mexer com HTML, o que não é necessário em API
     {
         private readonly ApplicationDbContext database;
+        private HATEOAS.HATEOAS HATEOAS;
+
         public ProdutosController(ApplicationDbContext database)
         {
             this.database = database;
+            HATEOAS = new HATEOAS.HATEOAS("localhost:5001/api/v1/Produtos");
+            HATEOAS.AddAction("GET_INFO", "GET");
+            HATEOAS.AddAction("DELETE_PRODUCT", "DELETE");
+            HATEOAS.AddAction("EDIT_PRODUCT", "PATCH");
         }
 
         [HttpGet] // Importante sempre passar o verbo http
@@ -21,7 +29,15 @@ namespace estudo_api.Controllers
         {
             var proJson = database.Produtos.ToList();
 
-            return Ok(proJson);
+            List<ProdutoContainer> produtosHATEOAS = new List<ProdutoContainer>();
+            foreach(var prod in proJson)
+            {
+                ProdutoContainer produtoHATEOAS = new ProdutoContainer();
+                produtoHATEOAS.produto = prod;
+                produtoHATEOAS.links = HATEOAS.GetActions(prod.Id.ToString());
+                produtosHATEOAS.Add(produtoHATEOAS);
+            }
+            return Ok(produtosHATEOAS);
 
             // return Ok(new {nome = "Fabiano Preto", empresa = "GFT"}); // Retorna status code 200 e dados dentro do ()
             // Há outros como esse, exemplo badRequest e NotFound
@@ -34,7 +50,10 @@ namespace estudo_api.Controllers
             try // Usar try catch para fazer a tratativa do erro, em caso de se passar um id inválido
             {
                 Produto proJson = database.Produtos.First(p => p.Id == id);
-                return Ok(proJson);
+                ProdutoContainer produtoHATEOS = new ProdutoContainer();
+                produtoHATEOS.produto = proJson;
+                produtoHATEOS.links = HATEOAS.GetActions(proJson.Id.ToString());
+                return Ok(produtoHATEOS);
             }
             catch (Exception)
             {
@@ -122,6 +141,12 @@ namespace estudo_api.Controllers
                 Response.StatusCode = 400;
                 return new ObjectResult(new {msg = "Id do produto é inválido"});
             }
+        }
+
+        public class ProdutoContainer
+        {
+            public Produto produto { get; set; }
+            public Link[] links { get; set; }
         }
 
         public class ProdutoTemp {
