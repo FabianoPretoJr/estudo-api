@@ -5,11 +5,13 @@ using System.Linq;
 using System;
 using estudo_api.HATEOAS;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace estudo_api.Controllers
 {
     [Route("api/v1/[controller]")] // Necessário para definir a rota, não é automático como em MVC
     [ApiController] // Necessário adicionar pra indicar a API e fazer algumas ações por baixo dos panos
+    [Authorize(Roles = "Admin")]
     public class ProdutosController : ControllerBase // Tem menos recursos que o Controller, como poder mexer com HTML, o que não é necessário em API
     {
         private readonly ApplicationDbContext database;
@@ -22,6 +24,14 @@ namespace estudo_api.Controllers
             HATEOAS.AddAction("GET_INFO", "GET");
             HATEOAS.AddAction("DELETE_PRODUCT", "DELETE");
             HATEOAS.AddAction("EDIT_PRODUCT", "PATCH");
+        }
+
+        [HttpGet("teste")]
+        public IActionResult TesteClaims()
+        {
+            var id = HttpContext.User.Claims.First(claim => claim.Type.ToString().Equals("id", StringComparison.InvariantCultureIgnoreCase)).Value;
+            Response.StatusCode = 200;
+            return new ObjectResult(new {id = id});
         }
 
         [HttpGet] // Importante sempre passar o verbo http

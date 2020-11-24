@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using estudo_api.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace estudo_api
 {
@@ -32,6 +35,23 @@ namespace estudo_api
             services.AddSwaggerGen(config => {
                 config.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {Title = "API DE PRODUTOS", Version = "v1"});
             });
+
+            string chaveDeSeguranca = "hdjflj5fv5v45fv54v65v";
+            var chaveSimetrica = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(chaveDeSeguranca));
+
+            // Dizendo que vai usar JWT como autenticação
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+                // Como o sistema deve ler o token
+                options.TokenValidationParameters = new TokenValidationParameters{
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    // Dados de validação de um JWT
+                    ValidIssuer = "Fabiano Preto",
+                    ValidAudience = "usuario_comum",
+                    IssuerSigningKey = chaveSimetrica
+                };
+            }); // Sinalizando ao ASPNET Core que estou usando JWT
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +63,8 @@ namespace estudo_api
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication(); // Aplicando o sistema de autenticação na aplicação
 
             app.UseRouting();
 
